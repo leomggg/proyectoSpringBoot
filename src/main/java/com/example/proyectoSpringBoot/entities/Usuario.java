@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@Table(name = "usuarios")
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +14,8 @@ public class Usuario {
     private String nombre;
     private String contraseña;
 
-    public Usuario() {}
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Perfil perfil;
 
     public Usuario(String nombre, String contraseña) {
         this.nombre = nombre;
