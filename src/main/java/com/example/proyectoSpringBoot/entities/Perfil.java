@@ -1,15 +1,15 @@
 package com.example.proyectoSpringBoot.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.sql.Date;
 
 @Data
 @Entity
+@Table(name = "perfiles")
 public class Perfil {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,21 +19,10 @@ public class Perfil {
     private long telefono;
     private Date fechaNacimiento; //No sé si ponerlo como string
 
-    public Perfil() {}
-
-    public Perfil(String direccion, long telefono, Date fechaNacimiento) {
-        this.direccion = direccion;
-        this.telefono = telefono;
-        this.fechaNacimiento = fechaNacimiento;
-    }
-
-    public Long getId() {return id;}
-    public String getDireccion() {return direccion;}
-    public Long getTelefono() {return telefono;}
-    public Date getFechaNacimiento() {return fechaNacimiento;}
-
-    public void setId(Long id) {this.id = id;}
-    public void setDireccion(String direccion) {this.direccion = direccion;}
-    public void setTelefono(long telefono) {this.telefono = telefono;}
-    public void setFechaNacimiento(Date fechaNacimiento) {this.fechaNacimiento = fechaNacimiento;}
+    //! Relación 1:1 con Usuario
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", unique = true, nullable = false)
+    private Usuario usuario;
 }

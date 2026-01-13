@@ -13,27 +13,32 @@ import com.vaadin.flow.component.notification.Notification;
 @Route("")
 public class UsuarioView extends VerticalLayout {
     private final UsuarioService usuarioService;
-    private Grid<Usuario> grid = new Grid<>(Usuario.class);
+
+    private Grid<Usuario> grid = new Grid<>();
+
     public UsuarioView(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
 
         TextField nombreField = new TextField("Nombre");
-        PasswordField contraseñaField = new PasswordField("Contraseña");
+        PasswordField contrasenaField = new PasswordField("Contraseña");
         Button guardarButton = new Button("Guardar Usuario");
 
         guardarButton.addClickListener(e -> {
-            Usuario usuario = new Usuario(nombreField.getValue(),
-                    contraseñaField.getValue());
-            usuarioService.guardarUsuario(usuario);
-            Notification.show("Usuario guardado correctamente");
-            actualizarLista();
-            nombreField.setValue("");
-            contraseñaField.setValue("");
+            if (!nombreField.isEmpty() && !contrasenaField.isEmpty()) {
+                Usuario usuario = new Usuario(nombreField.getValue(), contrasenaField.getValue());
+                usuarioService.guardarUsuario(usuario);
+                Notification.show("Usuario guardado correctamente");
+                actualizarLista();
+                nombreField.clear();
+                contrasenaField.clear();
+            }
         });
 
-        grid.setColumns("id", "nombre", "contraseña");
+        grid.addColumn(Usuario::getId).setHeader("ID");
+        grid.addColumn(Usuario::getNombre).setHeader("Nombre");
+        grid.addColumn(Usuario::getContrasena).setHeader("Contraseña");
         actualizarLista();
-        add(nombreField, contraseñaField, guardarButton, grid);
+        add(nombreField, contrasenaField, guardarButton, grid);
     }
 
     private void actualizarLista() {
