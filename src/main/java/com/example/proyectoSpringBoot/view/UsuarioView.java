@@ -9,6 +9,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.notification.Notification;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @Route("")
 public class UsuarioView extends VerticalLayout {
@@ -24,13 +25,22 @@ public class UsuarioView extends VerticalLayout {
         Button guardarButton = new Button("Guardar Usuario");
 
         guardarButton.addClickListener(e -> {
-            if (!nombreField.isEmpty() && !contrasenaField.isEmpty()) {
-                Usuario usuario = new Usuario(nombreField.getValue(), contrasenaField.getValue());
-                usuarioService.guardarUsuario(usuario);
-                Notification.show("Usuario guardado correctamente");
-                actualizarLista();
-                nombreField.clear();
-                contrasenaField.clear();
+            try{
+                if (!nombreField.isEmpty() && !contrasenaField.isEmpty()) {
+
+                    Usuario usuario = new Usuario(nombreField.getValue(), contrasenaField.getValue());
+                    usuarioService.guardarUsuario(usuario);
+
+                    Notification.show("Usuario guardado correctamente");
+
+                    actualizarLista();
+                    nombreField.clear();
+                    contrasenaField.clear();
+                }
+            } catch (DataIntegrityViolationException ex) {
+                Notification.show("Error: El nombre de usuario ya existe");
+            } catch (Exception ex) {
+                Notification.show("Error al guardar el usuario: " + ex.getMessage());
             }
         });
 

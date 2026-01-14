@@ -19,7 +19,7 @@ public class PerfilService {
         return perfilRepository.save(perfil);
     }
 
-    public List<Perfil> obtenerPerfil() {
+    public List<Perfil> obtenerPerfiles() {
         return perfilRepository.findAll();
     }
 }
